@@ -31,7 +31,5 @@ public class Balloon : MonoBehaviour
 
         if (breatheCoolDown != 0)
             breatheCoolDown--;
-        
-        Debug.Log("breathe: " + breatheCoolDown);
     }
 }
