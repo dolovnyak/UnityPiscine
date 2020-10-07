@@ -8,13 +8,13 @@ public class Bird : MonoBehaviour
     public int Score { get; set; }
     [SerializeField] private float gravitation;
     [SerializeField] private float jumpEnergy;
-    private float movement;
+    private float speed;
 
     // Start is called before the first frame update
     void Start()
     {
         IsGameOver = false;
-        movement = 0.0f;
+        speed = 0.0f;
         Score = 0;
     }
 
@@ -34,9 +34,9 @@ public class Bird : MonoBehaviour
         }
         if (Input.GetKeyDown("space"))
         {
-            movement = jumpEnergy;
+            speed = jumpEnergy;
         }
-        movement -= gravitation;
-        gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x, gameObject.transform.localPosition.y + movement * Time.deltaTime, gameObject.transform.localPosition.z);
+        speed -= gravitation;
+        gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x, gameObject.transform.localPosition.y + speed * Time.deltaTime, gameObject.transform.localPosition.z);
     }
 }
