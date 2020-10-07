@@ -20,6 +20,7 @@ public class SpawnCube : MonoBehaviour
     {
         if (Time.time - previousTime > spawnPeriod)
         {
+            cube.GetComponent<Cube>().Speed = Random.Range(0.03f, 0.1f);
             Instantiate(cube, new Vector3(gameObject.transform.localPosition.x, gameObject.transform.localPosition.y, -9.0f), Quaternion.identity);
             previousTime = Time.time;
         }

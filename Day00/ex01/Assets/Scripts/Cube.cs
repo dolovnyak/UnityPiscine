@@ -5,6 +5,7 @@ using UnityEngine;
 public class Cube : MonoBehaviour
 {
     [SerializeField] private KeyCode key;
+    public float Speed;
     
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,6 @@ public class Cube : MonoBehaviour
         }
 
         gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x,
-            gameObject.transform.localPosition.y - Random.Range(0.03f, 0.1f), gameObject.transform.localPosition.z);
+            gameObject.transform.localPosition.y - Speed, gameObject.transform.localPosition.z);
     }
 }
