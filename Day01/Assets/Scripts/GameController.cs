@@ -52,7 +52,14 @@ public class GameController : MonoBehaviour
         if (_john.OnFinish && _claire.OnFinish && _thomas.OnFinish)
         {
             Debug.Log("Nice");
-            Application.LoadLevel("ex00");
+            if (Application.loadedLevelName == "ex00_ex01")
+            {
+                Application.LoadLevel("ex02");
+            }
+            if (Application.loadedLevelName == "ex02")
+            {
+                Application.LoadLevel("ex00_ex01");
+            }
         }
     }
 }
