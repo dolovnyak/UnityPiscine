@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayersController : MonoBehaviour
+public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject john;
     [SerializeField] private GameObject thomas;
@@ -20,9 +20,6 @@ public class PlayersController : MonoBehaviour
         _john.IsActivePlayer = true;
         _thomas.IsActivePlayer = false;
         _claire.IsActivePlayer = false;
-        john.GetComponent<Rigidbody2D>().isKinematic = false;
-        claire.GetComponent<Rigidbody2D>().simulated = false;
-        thomas.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
     }
 
     // Update is called once per frame
@@ -45,6 +42,17 @@ public class PlayersController : MonoBehaviour
             _john.IsActivePlayer = false;
             _thomas.IsActivePlayer = false;
             _claire.IsActivePlayer = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Backspace))
+        {
+            Application.LoadLevel(Application.loadedLevel);
+        }
+
+        if (_john.OnFinish && _claire.OnFinish && _thomas.OnFinish)
+        {
+            Debug.Log("Nice");
+            Application.LoadLevel("ex00");
         }
     }
 }
