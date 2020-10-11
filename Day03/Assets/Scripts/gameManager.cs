@@ -28,7 +28,7 @@ public class gameManager : MonoBehaviour {
 	}
 
 	void Start() {
-		Time.timeScale = 1;
+		Time.timeScale = 0;
 		playerHp = playerMaxHp;
 		playerEnergy = playerStartEnergy;
 	}

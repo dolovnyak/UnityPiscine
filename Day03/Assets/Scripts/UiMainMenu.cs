@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuController : MonoBehaviour
+public class UiMainMenu : MonoBehaviour
 {
     public void LoadFirstLevel()
     {
@@ -13,5 +13,4 @@ public class MenuController : MonoBehaviour
     {
         Application.Quit();
     }
-
 }
