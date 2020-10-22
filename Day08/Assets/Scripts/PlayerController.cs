@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class PlayerController : MonoBehaviour
 {
     public float AttackFrame = 0.5f;
+    public float Damage = 20;
     [SerializeField] private Camera camera = null;
     [SerializeField] private NavMeshAgent agent = null;
     [SerializeField] private LayerMask enemyLayers = 0;
@@ -64,6 +65,11 @@ public class PlayerController : MonoBehaviour
             _animator.SetTrigger("attack");
             _nextAttackTime = Time.time + 1f / AttackFrame;
             transform.forward = Vector3.Normalize(_currentTarget.transform.position - transform.position);
+            _currentTarget.GetComponent<EnemyController>().TakeDamage(Damage);
+            if (_currentTarget.GetComponent<EnemyController>().IsDead)
+            {
+                _currentTarget = null;
+            }
         }
     }
 

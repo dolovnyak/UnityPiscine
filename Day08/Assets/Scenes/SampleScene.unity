@@ -972,7 +972,7 @@ PrefabInstance:
     - target: {fileID: 9500000, guid: edb27a59002a0b743af33db7e327ffe7, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 37d59d8edd77e4428bf1c8aba165d971, type: 2}
+      objectReference: {fileID: 9100000, guid: 1b8e71508a5644ced8ac71ffd210b3d0, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edb27a59002a0b743af33db7e327ffe7, type: 3}
 --- !u!1001 &1519867295
@@ -1385,7 +1385,7 @@ PrefabInstance:
     - target: {fileID: 9500000, guid: c78068908f8aadb45a12635af21fcb1d, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 37d59d8edd77e4428bf1c8aba165d971, type: 2}
+      objectReference: {fileID: 9100000, guid: 1b8e71508a5644ced8ac71ffd210b3d0, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c78068908f8aadb45a12635af21fcb1d, type: 3}
 --- !u!1 &1635841661 stripped
@@ -1411,6 +1411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AttackFrame: 0.5
+  Damage: 20
   camera: {fileID: 963194227}
   agent: {fileID: 1635841665}
   enemyLayers:
@@ -1480,6 +1481,20 @@ CapsuleCollider:
   m_Height: 0.073
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1646238793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646238788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36b9b952b0edf4dd3b839c2800a8da35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDead: 0
+  maxHp: 100
 --- !u!1 &1756248920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1602,6 +1617,20 @@ CapsuleCollider:
   m_Height: 0.073
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1851029421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851029416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36b9b952b0edf4dd3b839c2800a8da35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDead: 0
+  maxHp: 100
 --- !u!1 &2078680706
 GameObject:
   m_ObjectHideFlags: 0
