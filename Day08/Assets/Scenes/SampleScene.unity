@@ -1410,12 +1410,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1bd59b23c3cf42dba86e7b1c5e0ef45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AttackFrame: 0.5
   camera: {fileID: 963194227}
   agent: {fileID: 1635841665}
   enemyLayers:
     serializedVersion: 2
     m_Bits: 256
-  attackDistance: 10
+  attackDistance: 5
 --- !u!195 &1635841665
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1425,12 +1426,12 @@ NavMeshAgent:
   m_GameObject: {fileID: 1635841661}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.01
+  m_Radius: 0.005
   m_Speed: 25
   m_Acceleration: 100000
   avoidancePriority: 50
   m_AngularSpeed: 300
-  m_StoppingDistance: 0.5
+  m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 0
@@ -1452,7 +1453,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1646238788}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.01
+  m_Radius: 0.005
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1574,7 +1575,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1851029416}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.01
+  m_Radius: 0.005
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50

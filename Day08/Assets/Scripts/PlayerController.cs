@@ -5,12 +5,16 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    public float AttackFrame = 0.5f;
     [SerializeField] private Camera camera = null;
     [SerializeField] private NavMeshAgent agent = null;
     [SerializeField] private LayerMask enemyLayers = 0;
     [SerializeField] private float attackDistance = 0f;
     private Animator _animator;
     private GameObject _currentTarget;
+    private float _nextAttackTime = 0f;
+    private Vector3 _currentPath;
+    private bool _inBattle = false;
     
     void Start()
     {
@@ -24,30 +28,42 @@ public class PlayerController : MonoBehaviour
 
         if (_currentTarget != null)
         {
-            EnemyProcessing();
+            if (Vector3.Distance(transform.position, _currentTarget.transform.position) <= attackDistance)
+            {
+                agent.ResetPath();
+                _inBattle = true;
+                InAttackRangeProcessing();
+            }
+            else
+            {
+                _currentPath = _currentTarget.transform.position;
+                _inBattle = false;
+            }
+        }
+        if (!_inBattle && !_animator.GetCurrentAnimatorStateInfo(0).IsName("AttackMaya"))
+        {
+            agent.SetDestination(_currentPath);
         }
 
         bool shouldActiveRunAnimation = agent.remainingDistance > agent.stoppingDistance;
         _animator.SetBool("run", shouldActiveRunAnimation);
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _animator.SetTrigger("attack");
-        }
-
+        
         transform.position = Vector3.Lerp(transform.position, agent.nextPosition, 0.2f + Time.deltaTime);
     }
 
-    void EnemyProcessing()
+    void InAttackRangeProcessing()
     {
-        if (Vector3.Distance(transform.position, _currentTarget.transform.position) <= attackDistance)
+        var playerEnemyDir = Vector3.Normalize(_currentTarget.transform.position - transform.position);
+
+        if ((transform.forward - playerEnemyDir).magnitude > 0.1f)
         {
-            Debug.Log("Nu vce Tepepb To4Ho pezda");
-            agent.ResetPath();
+            transform.forward = Vector3.Lerp(transform.forward, playerEnemyDir, 0.03f + Time.deltaTime);
         }
-        else
+        else if (Time.time >= _nextAttackTime)
         {
-            agent.SetDestination(_currentTarget.transform.position);
+            _animator.SetTrigger("attack");
+            _nextAttackTime = Time.time + 1f / AttackFrame;
+            transform.forward = Vector3.Normalize(_currentTarget.transform.position - transform.position);
         }
     }
 
@@ -68,7 +84,8 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     _currentTarget = null;
-                    agent.SetDestination(hit.point);
+                    _currentPath = hit.point;
+                    _inBattle = false;
                 }
             }
         }
