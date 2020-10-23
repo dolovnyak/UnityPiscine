@@ -5,17 +5,19 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    public float AttackFrame = 0.5f;
+    public float AttackDelay = 0.5f;
     public float Damage = 20;
     [SerializeField] private Camera camera = null;
     [SerializeField] private NavMeshAgent agent = null;
     [SerializeField] private LayerMask enemyLayers = 0;
     [SerializeField] private float attackDistance = 0f;
+    [SerializeField] private float interactionDistance = 0f;
     private Animator _animator;
     private GameObject _currentTarget;
     private float _nextAttackTime = 0f;
     private Vector3 _currentPath;
     private bool _inBattle = false;
+    private bool _isWalk = false;
     
     void Start()
     {
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
         if (_currentTarget != null)
         {
+            _isWalk = false;
             if (Vector3.Distance(transform.position, _currentTarget.transform.position) <= attackDistance)
             {
                 agent.ResetPath();
@@ -45,10 +48,32 @@ public class PlayerController : MonoBehaviour
         {
             agent.SetDestination(_currentPath);
         }
+        bool isAnimateRunning = agent.remainingDistance > agent.stoppingDistance;
+        _animator.SetBool("run", isAnimateRunning);
 
-        bool shouldActiveRunAnimation = agent.remainingDistance > agent.stoppingDistance;
-        _animator.SetBool("run", shouldActiveRunAnimation);
-        
+        if (Vector3.Distance(_currentPath, transform.position) <= agent.stoppingDistance + 0.001f)
+        {
+            _isWalk = false;
+        }
+        if (!_isWalk && _currentTarget == null)
+        {
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.forward * 0.001f, interactionDistance, 
+                transform.forward, interactionDistance, enemyLayers);
+            if (hits != null && hits.Length != 0)
+            {
+                var minDistance = Vector3.Distance(hits[0].collider.gameObject.transform.position, transform.position);
+                _currentTarget = hits[0].collider.gameObject;
+                foreach (var hit in hits)
+                {
+                    if (Vector3.Distance(hit.collider.gameObject.transform.position, transform.position) < minDistance)
+                    {
+                        minDistance = Vector3.Distance(hit.collider.gameObject.transform.position, transform.position);
+                        _currentTarget = hit.collider.gameObject;
+                    }
+                }
+            }
+        }
+
         transform.position = Vector3.Lerp(transform.position, agent.nextPosition, 0.2f + Time.deltaTime);
     }
 
@@ -63,12 +88,13 @@ public class PlayerController : MonoBehaviour
         else if (Time.time >= _nextAttackTime)
         {
             _animator.SetTrigger("attack");
-            _nextAttackTime = Time.time + 1f / AttackFrame;
-            transform.forward = Vector3.Normalize(_currentTarget.transform.position - transform.position);
+            _nextAttackTime = Time.time + 1f / AttackDelay;
+            transform.forward = playerEnemyDir;
             _currentTarget.GetComponent<EnemyController>().TakeDamage(Damage);
             if (_currentTarget.GetComponent<EnemyController>().IsDead)
             {
                 _currentTarget = null;
+                _inBattle = false;
             }
         }
     }
@@ -91,6 +117,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _currentTarget = null;
                     _currentPath = hit.point;
+                    _isWalk = true;
                     _inBattle = false;
                 }
             }
