@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     public float AttackDelay = 0.5f;
     public float Damage = 20;
+    public float MaxHp = 100f;
+    [HideInInspector] public bool IsDead = false;
+
     [SerializeField] private Camera camera = null;
     [SerializeField] private NavMeshAgent agent = null;
     [SerializeField] private LayerMask enemyLayers = 0;
@@ -18,15 +21,22 @@ public class PlayerController : MonoBehaviour
     private Vector3 _currentPath;
     private bool _inBattle = false;
     private bool _isWalk = false;
+    private float _currentHp;
     
     void Start()
     {
         _animator = GetComponent<Animator>();
         agent.updatePosition = false;
+        _currentHp = MaxHp;
     }
 
     void Update()
     {
+        if (IsDead)
+        {
+            return;
+        }
+
         EventProcessing();
 
         if (_currentTarget != null)
@@ -122,5 +132,22 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        _currentHp -= damage;
+        Debug.Log("hp: " + _currentHp);
+        if (_currentHp <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        IsDead = true;
+        _animator.SetTrigger("die");
+        gameObject.GetComponent<NavMeshAgent>().enabled = false;
     }
 }

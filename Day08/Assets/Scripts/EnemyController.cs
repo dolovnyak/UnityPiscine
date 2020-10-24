@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private NavMeshAgent agent = null;
 
+    private PlayerController _player;
     private Animator _animator;
     private float _currentHp;
     private float _nextAttackTime = 0f;
@@ -34,53 +35,53 @@ public class EnemyController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _currentHp = MaxHp;
         _spawnPosition = transform.position;
+        _player = PlayerObject.GetComponent<PlayerController>();
     }
 
     void Update()
     {
-        if (IsDead)
+        if (IsDead || _player.IsDead)
         {
             if (_isRotting)
             {
                 Rot();
             }
+            return;
+        }
+
+        if (!_isFollowPlayer)
+        {
+            if (Vector3.Distance(PlayerObject.transform.position, transform.position) <= InteractionDistance)
+            {
+                _isFollowPlayer = true;
+                _startFollowPlayerTime = Time.time;
+            }
         }
         else
         {
-            if (!_isFollowPlayer)
+            if (Vector3.Distance(transform.position, PlayerObject.transform.position) <= AttackDistance)
             {
-                if (Vector3.Distance(PlayerObject.transform.position, transform.position) <= InteractionDistance)
-                {
-                    _isFollowPlayer = true;
-                    _startFollowPlayerTime = Time.time;
-                }
+                _startFollowPlayerTime = Time.time;
+                agent.ResetPath();
+                InAttackRangeProcessing();
             }
             else
             {
-                if (Vector3.Distance(transform.position, PlayerObject.transform.position) <= AttackDistance)
+                if (Time.time - _startFollowPlayerTime > FollowPlayerTime)
                 {
-                    _startFollowPlayerTime = Time.time;
-                    agent.ResetPath();
-                    InAttackRangeProcessing();
+                    agent.SetDestination(_spawnPosition);
+                    _isFollowPlayer = false;
                 }
                 else
                 {
-                    if (Time.time - _startFollowPlayerTime > FollowPlayerTime)
-                    {
-                        agent.SetDestination(_spawnPosition);
-                        _isFollowPlayer = false;
-                    }
-                    else
-                    {
-                        agent.SetDestination(PlayerObject.transform.position);
-                    }
+                    agent.SetDestination(PlayerObject.transform.position);
                 }
             }
-
-            bool shouldActiveRunAnimation = agent.remainingDistance > agent.stoppingDistance;
-            _animator.SetBool("run", shouldActiveRunAnimation);
-        // transform.position = Vector3.Lerp(transform.position, agent.nextPosition, 0.2f + Time.deltaTime);
         }
+
+        bool shouldActiveRunAnimation = agent.remainingDistance > agent.stoppingDistance;
+        _animator.SetBool("run", shouldActiveRunAnimation);
+        // transform.position = Vector3.Lerp(transform.position, agent.nextPosition, 0.2f + Time.deltaTime);
     }
 
     void InAttackRangeProcessing()
@@ -96,6 +97,7 @@ public class EnemyController : MonoBehaviour
             _animator.SetTrigger("attack");
             _nextAttackTime = Time.time + 1f / AttackDelay;
             transform.forward = enemyPlayerDir;
+            _player.TakeDamage(Damage);
         }
     }
 
@@ -112,7 +114,6 @@ public class EnemyController : MonoBehaviour
     private void Die()
     {
         IsDead = true;
-        Debug.Log("cMepTb");
         _animator.SetTrigger("die");
         gameObject.GetComponent<NavMeshAgent>().enabled = false;
         gameObject.GetComponent<Collider>().enabled = false;
