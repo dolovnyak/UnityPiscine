@@ -1245,7 +1245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canon: {fileID: 2126742465}
   speed: 70
-  speedUp: 2
+  speedUp: 1.5
   solidSurfaceLayers:
     serializedVersion: 2
     m_Bits: 1024
